@@ -1,0 +1,6 @@
+{
+  "name": "مدارِ طیف — مبانی و فیزیک سنجش از دور",
+  "description": "کورس تعاملی و آزمایشگاه مجازی برای یادگیری مبانی، قوانین تابش الکترومغناطیسی، فیزیک جو، امضای طیفی عوارض و تفکیک‌پذیری سنجنده‌ها در سنجش از دور.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
