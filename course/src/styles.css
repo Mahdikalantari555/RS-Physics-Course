@@ -1,0 +1,111 @@
+@import "@fontsource/vazirmatn/arabic-400.css";
+@import "@fontsource/vazirmatn/arabic-500.css";
+@import "@fontsource/vazirmatn/arabic-600.css";
+@import "@fontsource/vazirmatn/arabic-700.css";
+@import "@fontsource/vazirmatn/latin-400.css";
+@import "@fontsource/vazirmatn/latin-500.css";
+@import "@fontsource/vazirmatn/latin-700.css";
+@import "katex/dist/katex.min.css";
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #1c1915;
+  --color-ink-soft: #3f3832;
+  --color-muted: #5e564e;
+  --color-parchment: #f3eee6;
+  --color-paper: #fbf8f3;
+  --color-card: #fffdf9;
+  --color-line: #e3d8cb;
+  --color-cane: #1f6b4a;
+  --color-cane-soft: #e7f2ec;
+  --color-copper: #b4532a;
+  --color-copper-soft: #f8ece6;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-parchment);
+    color: var(--color-ink);
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-copper);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-copper) 28%, white);
+    color: var(--color-ink);
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+/* KaTeX vs Tailwind preflight: keep fraction bars and the math font. */
+.katex {
+  font: normal 1.15em KaTeX_Main, Times New Roman, serif;
+  line-height: 1.2;
+  text-indent: 0;
+  direction: ltr;
+  unicode-bidi: isolate;
+  color: inherit;
+}
+
+.katex .frac-line {
+  border-bottom-width: 0.04em;
+  border-bottom-style: solid;
+  border-bottom-color: currentColor;
+}
+
+.formula-display .katex {
+  font-size: 1.35rem;
+}
+
+.formula-display .fp {
+  cursor: pointer;
+  border-radius: 0.25rem;
+  padding: 0 0.08em;
+  transition: background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.formula-display .fp.is-on {
+  background: color-mix(in srgb, var(--color-copper) 32%, transparent);
+  box-shadow: inset 0 -2px 0 var(--color-copper);
+}
+
+@media (max-width: 640px) {
+  .formula-display .katex {
+    font-size: 1.05rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
