@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/math/solving",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "حل فرمول برای مجهول · ریاضی",
+      "hasCanvas": false,
+      "bodyTextLen": 3720,
+      "bodyTextHash": "68ae871a35c601c39d1f7193d2facab0a706a85f920f4726157e8e9581a64c61",
+      "bodyTextPrefix": "کورس تعاملی فیزیک سنجش از دور درس‌ها ریاضی حل آزمایشگاه آزمون هم",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/solving.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "حل فرمول برای مجهول · ریاضی",
+      "hasCanvas": false,
+      "bodyTextLen": 3720,
+      "bodyTextHash": "68ae871a35c601c39d1f7193d2facab0a706a85f920f4726157e8e9581a64c61",
+      "bodyTextPrefix": "کورس تعاملی فیزیک سنجش از دور درس‌ها ریاضی حل آزمایشگاه آزمون هم",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/solving-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/solving.json"
+}
