@@ -101,7 +101,7 @@ export default function App() {
   const navItems: Array<{ id: AppView; label: string }> = [
     { id: 'overview', label: 'نقشه دوره' },
     { id: 'workspace', label: 'آزمایشگاه‌ها' },
-    { id: 'formulas', label: 'فرمول‌ها و ریاضی' },
+    { id: 'formulas', label: 'فرمول‌ها' },
     { id: 'quiz', label: 'آزمون نهایی' },
   ];
 

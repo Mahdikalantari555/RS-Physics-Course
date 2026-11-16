@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/solve/ndvi-ratio",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "NDVI، نسبت باندها، و نور نصف · حل مسئله",
+      "hasCanvas": false,
+      "bodyTextLen": 4050,
+      "bodyTextHash": "2bcde004473943ca59e7db6bf80d25e418a5370b83be3788e688d771b90d202a",
+      "bodyTextPrefix": "کورس تعاملی فیزیک سنجش از دور درس‌ها ریاضی حل آزمایش آزمون همه‌ی",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/ndvi.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "NDVI، نسبت باندها، و نور نصف · حل مسئله",
+      "hasCanvas": false,
+      "bodyTextLen": 4050,
+      "bodyTextHash": "2bcde004473943ca59e7db6bf80d25e418a5370b83be3788e688d771b90d202a",
+      "bodyTextPrefix": "کورس تعاملی فیزیک سنجش از دور درس‌ها ریاضی حل آزمایش آزمون همه‌ی",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/ndvi-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/ndvi.json"
+}
