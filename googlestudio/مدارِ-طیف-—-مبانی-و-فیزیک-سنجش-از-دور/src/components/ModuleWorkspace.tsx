@@ -6,6 +6,7 @@ import { BlackbodyLab } from './labs/BlackbodyLab';
 import { AtmosphereLab } from './labs/AtmosphereLab';
 import { SpectralSignatureLab } from './labs/SpectralSignatureLab';
 import { SensorResolutionLab } from './labs/SensorResolutionLab';
+import { InteractiveFormula } from './InteractiveFormula';
 
 interface ModuleWorkspaceProps {
   modules: CourseModule[];
@@ -204,17 +205,21 @@ export function ModuleWorkspace({
 
                   <p className="text-sm text-slate-700 leading-relaxed">{step.summaryFa}</p>
 
-                  {/* Key Equation Box */}
-                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
-                    <div className="text-xs text-slate-500 mb-1.5">رابطه کلیدی فیزیکی</div>
-                    <div
-                      className="text-sm font-semibold font-mono-tech text-slate-900 bg-white border border-slate-200 rounded-lg py-2.5 px-3 text-center overflow-x-auto"
-                      dir="ltr"
-                    >
-                      {step.formulaLatexText}
+                  {/* Interactive Formula Breakdown */}
+                  {step.formulaId ? (
+                    <InteractiveFormula key={step.id} formulaId={step.formulaId} compact />
+                  ) : (
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                      <div className="text-xs text-slate-500 mb-1.5">رابطه کلیدی فیزیکی</div>
+                      <div
+                        className="text-sm font-semibold font-mono-tech text-slate-900 bg-white border border-slate-200 rounded-lg py-2.5 px-3 text-center overflow-x-auto"
+                        dir="ltr"
+                      >
+                        {step.formulaLatexText}
+                      </div>
+                      <div className="text-xs text-slate-600 mt-2 leading-relaxed">{step.formulaDescFa}</div>
                     </div>
-                    <div className="text-xs text-slate-600 mt-2 leading-relaxed">{step.formulaDescFa}</div>
-                  </div>
+                  )}
 
                   {/* Interactive Experiment Prompt */}
                   <div className="bg-sky-50 border border-sky-200 rounded-xl p-3.5 text-xs text-sky-950 leading-relaxed">

@@ -9,6 +9,7 @@ export interface LessonStep {
   id: string;
   titleFa: string;
   summaryFa: string;
+  formulaId?: string;
   formulaLatexText: string;
   formulaDescFa: string;
   experimentPromptFa: string;
@@ -60,6 +61,7 @@ export const COURSE_MODULES: CourseModule[] = [
         titleFa: 'دوگانگی موج و ذره در انتقال اطلاعات',
         summaryFa:
           'سنجش از دور بدون تماس فیزیکی، انرژی الکترومغناطیسی بازتابیده یا گسیل‌شده از سطح زمین را ثبت می‌کند. این امواج از دو میدان عمود بر هم الکتریکی (E) و مغناطیسی (B) تشکیل شده‌اند که با سرعت نور در خلأ منتشر می‌شوند.',
+        formulaId: 'wave-eq',
         formulaLatexText: 'c = λ · ν',
         formulaDescFa: 'c = 2.998×10⁸ m/s · λ طول‌موج (m) · ν بسامد (Hz)',
         experimentPromptFa:
@@ -70,6 +72,7 @@ export const COURSE_MODULES: CourseModule[] = [
         titleFa: 'انرژی فوتون و محدودیت تفکیک مکانی',
         summaryFa:
           'هرچه طول‌موج بلندتر شود، انرژی هر فوتون (E) کاهش می‌یابد. به همین دلیل در باندهای حرارتی و ریزموج که فوتون‌ها کم‌انرژی‌ترند، سنجنده برای دریافت سیگنال کافی باید سطح وسیع‌تری از زمین (پیکسل بزرگ‌تر) را نمونه‌برداری کند.',
+        formulaId: 'photon-energy',
         formulaLatexText: 'E = h · ν = (h · c) / λ',
         formulaDescFa: 'h = 6.626×10⁻³⁴ J·s (ثابت پلانک) · E انرژی فوتون',
         experimentPromptFa:
@@ -105,6 +108,7 @@ export const COURSE_MODULES: CourseModule[] = [
         titleFa: 'قانون پلانک و جابه‌جایی وین',
         summaryFa:
           'هر جسم با دمای بالاتر از صفر مطلق (۰ K) تابش الکترومغناطیسی گسیل می‌کند. قانون پلانک توزیع طیفی این تابش را بر حسب دما توصیف می‌کند و قانون وین نشان می‌دهد که قله تابش با افزایش دما به سمت طول‌موج‌های کوتاه‌تر جابه‌جا می‌شود.',
+        formulaId: 'wien-law',
         formulaLatexText: 'λ_max = b / T',
         formulaDescFa: 'b = 2897.8 μm·K (ثابت وین) · T دمای مطلق (K)',
         experimentPromptFa:
@@ -115,6 +119,7 @@ export const COURSE_MODULES: CourseModule[] = [
         titleFa: 'توان کل تابش (استفان-بولتزمن) و گسیلندگی',
         summaryFa:
           'سطح زیر منحنی پلانک یعنی کل انرژی تابشی در واحد سطح، متناسب با توان چهارم دما است! اجسام واقعی «جسم خاکستری» هستند و کسری از تابش جسم سیاه را با ضریب گسیلندگی (ε) گسیل می‌کنند.',
+        formulaId: 'stefan-boltzmann',
         formulaLatexText: 'M = ε · σ · T⁴',
         formulaDescFa: 'σ = 5.67×10⁻⁸ W·m⁻²·K⁻⁴ · ε ضریب گسیلندگی (0 تا 1)',
         experimentPromptFa:
@@ -150,6 +155,7 @@ export const COURSE_MODULES: CourseModule[] = [
         titleFa: 'سه رژیم پراکندگی: رایلی، می و غیرانتخابی',
         summaryFa:
           'وقتی ذرات جو بسیار کوچک‌تر از طول‌موج باشند (مولکول‌های N₂ و O₂)، پراکندگی رایلی رخ می‌دهد که شدت آن با λ⁻⁴ نسبت عکس دارد. ذرات هم‌اندازه طول‌موج (گردوغبار و دود) پراکندگی می و قطرات بزرگ ابر پراکندگی غیرانتخابی ایجاد می‌کنند.',
+        formulaId: 'rayleigh',
         formulaLatexText: 'I_Rayleigh ∝ λ⁻⁴',
         formulaDescFa: 'شدت پراکندگی مولکولی در باند آبی (~۰.۴۵ μm) حدود ۵ برابر قرمز (~۰.۶۷ μm) است',
         experimentPromptFa:
@@ -160,6 +166,7 @@ export const COURSE_MODULES: CourseModule[] = [
         titleFa: 'جذب گازهای جوی و پنجره‌های عبور',
         summaryFa:
           'گازهای H₂O، CO₂ و O₃ در طول‌موج‌های مشخصی تابش را به شدت جذب می‌کنند (مانند ۱.۴، ۱.۹ و ۶.۳ میکرومتر). ماهواره‌ها فقط در «پنجره‌های جوی» با عبور بالا (مرئی، NIR، SWIR و ۸–۱۴ μm) تصویربرداری می‌کنند.',
+        formulaId: 'beer-lambert',
         formulaLatexText: 'τ(λ) = exp(−k(λ) · sec θ)',
         formulaDescFa: 'τ(λ) ضریب عبور جو · θ زاویه سرسویی (Zenith Angle)',
         experimentPromptFa:
@@ -195,6 +202,7 @@ export const COURSE_MODULES: CourseModule[] = [
         titleFa: 'لبه قرمز پوشش گیاهی و جذب آب',
         summaryFa:
           'در پوشش گیاهی سالم، رنگدانه‌های کلروفیل نور آبی و قرمز را برای فتوسنتز جذب می‌کنند، اما ساختار اسفنجی سلول‌های مزوفیل در ناحیه فروسرخ نزدیک (NIR) تا ۵۰٪ نور را بازتاب می‌دهد. این جهش ناگهانی در ~۰.۷ μm «لبه قرمز» نام دارد.',
+        formulaId: 'ndvi-eq',
         formulaLatexText: 'NDVI = (ρ_NIR − ρ_Red) / (ρ_NIR + ρ_Red)',
         formulaDescFa: 'بازه‌ای بین 1− تا 1+ · مقادیر بالای 0.6 نشانگر پوشش متراکم و شاداب است',
         experimentPromptFa:
@@ -205,6 +213,7 @@ export const COURSE_MODULES: CourseModule[] = [
         titleFa: 'شاخص‌های آب و برف و ترکیب رنگ کاذب (False Color)',
         summaryFa:
           'چشم انسان تنها سه باند مرئی را می‌بیند، اما با نگاشت باند NIR به کانال قرمز نمایشگر (ترکیب استاندارد NIR-Red-Green)، پوشش گیاهی به رنگ قرمز روشن و آب زلال کاملاً سیاه دیده می‌شود. همچنین افت بازتاب برف در SWIR مبنای شاخص NDSI است.',
+        formulaId: 'ndvi-eq',
         formulaLatexText: 'NDSI = (ρ_Green − ρ_SWIR1) / (ρ_Green + ρ_SWIR1)',
         formulaDescFa: 'تمایز دقیق برف از ابر (ابر در SWIR بازتاب بالا دارد اما برف جذب شدید دارد)',
         experimentPromptFa:
@@ -240,6 +249,7 @@ export const COURSE_MODULES: CourseModule[] = [
         titleFa: 'تفکیک مکانی (GSD)، رادیومتری و موازنه پهنای جاروب',
         summaryFa:
           'اندازه پیکسل روی زمین (GSD) به ارتفاع مدار و زاویه دید لحظه‌ای (IFOV) بستگی دارد. کوچک کردن پیکسل یا باریک کردن پهنای باند، زمان بازدید مجدد (تفکیک زمانی) یا نسبت سیگنال به نویز را محدود می‌کند. عمق بیتی رادیومتری (مثل ۸ در برابر ۱۲ بیت) ظرافت تفکیک درخشندگی‌ها را تعیین می‌کند.',
+        formulaId: 'gsd-eq',
         formulaLatexText: 'GSD = 2 · H · tan(IFOV / 2)',
         formulaDescFa: 'H ارتفاع ماهواره (m) · IFOV میدان دید لحظه‌ای (rad)',
         experimentPromptFa:
@@ -250,8 +260,9 @@ export const COURSE_MODULES: CourseModule[] = [
         titleFa: 'سنجش غیرفعال اپتیکی در برابر رادار فعال (SAR)',
         summaryFa:
           'سنجنده‌های اپتیکی به نور خورشید وابسته‌اند و پشت ابر کور می‌شوند. در مقابل، رادار دهانه ترکیبی (SAR) خود پالس ریزموج (مثلاً باند C با طول‌موج ۵.۶ سانتی‌متر) گسیل کرده و پس‌پراکنش را ثبت می‌کند؛ بنابراین در شب و هوای ابری زمین را می‌بیند.',
-        formulaLatexText: 'σ⁰ = f(زبری سطح، ثابت دی‌الکتریک، زاویه تابش)',
-        formulaDescFa: 'آب آرام مثل آینه موج را به جلو بازمی‌تاباند (تاریک در SAR) و سازه‌های شهری پس‌پراکنش دوگانه روشن دارند',
+        formulaId: 'sar-db',
+        formulaLatexText: 'σ⁰(dB) = 10 · log₁₀(σ⁰_linear)',
+        formulaDescFa: 'آب آرام مثل آینه موج را به جلو بازمی‌تاباند (تاریک در SAR، ~22− dB) و سازه‌های شهری پس‌پراکنش دوگانه روشن دارند',
         experimentPromptFa:
           'در شبیه‌ساز سنجنده، پوشش ابر را فعال کنید و بین «سنجنده اپتیکی» و «رادار SAR» جابه‌جا شوید.',
       },
