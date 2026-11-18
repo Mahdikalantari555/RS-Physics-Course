@@ -170,7 +170,10 @@ export default defineConfig(({ command, isPreview }) => ({
     ...(command === "build" || isPreview
       ? [
           nitro({
-            preset: "node-server",
+            // `node-server` for the normal build/preview; static hosts
+            // (e.g. GitHub Pages via `scripts/build-pages.mjs`) override this
+            // with NITRO_PRESET=github-pages.
+            preset: process.env.NITRO_PRESET || "node-server",
             serverDir: "./server",
           }),
         ]
