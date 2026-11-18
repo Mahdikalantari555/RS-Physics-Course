@@ -26,9 +26,13 @@ jobs:
           cache: npm
           cache-dependency-path: course/package-lock.json
 
+      # `npm ci` fails here: the repo root defines `course` as an npm
+      # workspace but has no root package-lock.json (only course/package-lock.json
+      # and root bun.lock), so npm ci walks up to the workspace root, finds no
+      # lock file, and aborts. `npm install` works correctly from course/.
       - name: Install dependencies
         working-directory: course
-        run: npm ci --no-audit --no-fund
+        run: npm install --no-audit --no-fund
 
       - name: Build static site
         working-directory: course
