@@ -33,6 +33,9 @@ jobs:
       - name: Install dependencies
         working-directory: course
         run: npm install --no-audit --no-fund
+      # VITE_BASE has no trailing slash: it feeds TanStack Router's
+      # basePathname (route matching), while build-pages.mjs prefixes HTML
+      # asset URLs with `/RS-Physics-Course/` (trailing slash) separately.
 
       - name: Build static site
         working-directory: course
