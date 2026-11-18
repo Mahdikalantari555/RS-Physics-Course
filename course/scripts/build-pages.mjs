@@ -42,9 +42,11 @@ const result = spawnSync(
       NITRO_PRESET: "github-pages",
       // No accounts / no server on a static host.
       VITE_AUTH_ENABLED: "false",
-      // GitHub Pages serves this repo as a project page under `/RS-Physics-Course/`,
-      // so Vite and the router prefix all assets/links with that base path.
-      VITE_BASE: "/RS-Physics-Course/",
+      // GitHub Pages serves this repo as a project page under `/RS-Physics-Course/`.
+      // VITE_BASE feeds TanStack Router's basePathname (route matching), so it
+      // has NO trailing slash. HTML asset URLs get `/RS-Physics-Course/` (with
+      // trailing slash) from the rewriteHtml post-processing below.
+      VITE_BASE: "/RS-Physics-Course",
     },
   },
 );
