@@ -8,9 +8,15 @@ export function getRouter() {
     routeTree,
     // Prerender/SSR runs in Node (no `window`) and is crawled at the natural
     // path `/`, so the router base is `/` there. In the browser the app is
-    // served as a GitHub Pages project page under `/RS-Physics-Course/`
-    // (VITE_BASE), so client routing needs that base.
-    basePathname: typeof window === "undefined" ? "/" : (import.meta.env.VITE_BASE || "/"),
+    // served as a GitHub Pages project page under `/<repo>/`, so client routing
+    // needs that base. We derive it from the current URL at runtime (more
+    // reliable than import.meta.env.VITE_BASE replacement).
+    basePathname: typeof window === "undefined"
+      ? "/"
+      : (() => {
+          const segments = window.location.pathname.split("/").filter(Boolean);
+          return segments.length > 0 ? `/${segments[0]}` : "/";
+        })(),
     rewrite: previewPathRewrite(),
     defaultErrorComponent: AppErrorComponent,
   });
