@@ -2,11 +2,17 @@ export type FormulaToken =
   | { t: "tex"; latex: string }
   | { t: "part"; id: string; latex?: string };
 
+export type FormulaPartKind = "var" | "const" | "op";
+
 export type FormulaPart = {
   id: string;
   latex: string;
   name: string;
   explanation: string;
+  kind?: FormulaPartKind;
+  unitOrValue?: string;
+  mathRole?: string;
+  intuition?: string;
 };
 
 export type Formula = {

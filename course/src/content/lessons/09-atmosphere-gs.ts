@@ -30,7 +30,7 @@ export const atmosphereGs: Lesson = {
       type: "h2",
       text: "جذب گازهای جوی و پنجره‌های عبور",
     },
-    { type: "formula", id: "optical-depth" },
+    { type: "formula", id: "beer-lambert" },
     {
       type: "note",
       text: "τ(λ) ضریب عبور جو · θ زاویه سرسویی (Zenith Angle)\nرطوبت جو (بخار آب) را افزایش دهید و تنگ‌تر شدن پنجره‌های SWIR و بسته شدن کامل باند ۶٫۳ μm را مشاهده کنید.",

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Satellite } from 'lucide-react';
+import { useState } from "react";
+import { Satellite } from "lucide-react";
 
 interface ResilientImageProps {
   src: string;
@@ -8,18 +8,18 @@ interface ResilientImageProps {
   className?: string;
 }
 
-export function ResilientImage({ src, alt, caption, className = '' }: ResilientImageProps) {
+export function ResilientImage({ src, alt, caption, className = "" }: ResilientImageProps) {
   const [failed, setFailed] = useState(false);
 
   if (failed) {
     return (
       <div
-        className={`flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 via-sky-50 to-slate-200 border border-slate-200 text-slate-600 p-6 text-center ${className}`}
+        className={`flex flex-col items-center justify-center border border-line bg-paper p-6 text-center text-muted ${className}`}
         role="img"
         aria-label={alt}
       >
-        <Satellite className="w-8 h-8 text-sky-600 mb-2" aria-hidden="true" />
-        <p className="text-sm font-medium text-slate-800">{caption || alt}</p>
+        <Satellite className="mb-2 size-8 text-cane" aria-hidden="true" />
+        <p className="text-sm font-medium text-ink-soft">{caption || alt}</p>
       </div>
     );
   }

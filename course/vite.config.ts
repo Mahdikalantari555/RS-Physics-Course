@@ -85,7 +85,7 @@ function authPopupPlugin(): Plugin {
           }
 
           const host = String(
-            req.headers["x-forwarded-host"] ?? req.headers.host ?? "localhost:8080",
+            req.headers["x-forwarded-host"] ?? req.headers.host ?? "localhost:3000",
           );
           const proto = String(
             req.headers["x-forwarded-proto"] ??
@@ -142,15 +142,13 @@ function authPopupPlugin(): Plugin {
   };
 }
 
-// `0.0.0.0:8080` is the live-preview contract — don't change host/port.
-// The dev server starts once `src/router.tsx` and `src/routes/` exist — see
-// AGENTS.md § "First scaffold".
+// `0.0.0.0:3000` is the AI Studio preview contract.
 export default defineConfig(({ command, isPreview }) => ({
   server: {
     host: "0.0.0.0",
-    port: 8080,
+    port: 3000,
     strictPort: true,
-    // Live-preview proxies under *.e2b.app must be accepted.
+    // Live-preview proxies must be accepted.
     allowedHosts: true,
   },
   preview: {
@@ -172,10 +170,7 @@ export default defineConfig(({ command, isPreview }) => ({
     ...(command === "build" || isPreview
       ? [
           nitro({
-            preset: "vercel",
-            // Auto-registers server/middleware/* (the PWA install page +
-            // manifest + head-tag middleware). Nitro v3 defaults serverDir to
-            // false, so removing this silently unwires /?install=1 on deploys.
+            preset: "node-server",
             serverDir: "./server",
           }),
         ]

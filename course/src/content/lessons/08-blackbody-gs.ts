@@ -17,6 +17,7 @@ export const blackbodyGs: Lesson = {
       type: "h2",
       text: "قانون پلانک و جابه‌جایی وین",
     },
+    { type: "formula", id: "planck" },
     { type: "formula", id: "wien" },
     {
       type: "note",

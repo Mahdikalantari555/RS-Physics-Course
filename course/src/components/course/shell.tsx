@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 
 const NAV = [
   { to: "/", label: "درس‌ها", exact: true },
+  { to: "/formulas", label: "فرمول‌ها", exact: false },
   { to: "/math", label: "ریاضی", exact: false },
   { to: "/solve", label: "حل", exact: false },
   { to: "/labs", label: "آزمایش", exact: false },

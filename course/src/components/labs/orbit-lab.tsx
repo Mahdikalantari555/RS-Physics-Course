@@ -8,7 +8,7 @@ export const labMeta: LabMeta = {
   id: "orbit",
   title: "مدار دایره‌ای",
   summary: "ارتفاع را عوض کن. سرعت و دوره از گرانش می‌آیند. فاصله در تصویر فشرده شده تا مدار بالا هم در قاب بماند.",
-  order: 5,
+  order: 6,
 };
 
 const MIN_KM = 160;

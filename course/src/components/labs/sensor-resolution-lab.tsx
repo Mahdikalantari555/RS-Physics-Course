@@ -1,9 +1,8 @@
 import { useState } from "react";
 import type { LabMeta } from "@/content/types";
 import { useProgress } from "@/lib/progress";
-import { computeSensorGeometry, quantizeRadiometric } from '@/lib/remoteSensing';
+import { computeSensorGeometry, quantizeRadiometric } from "@/lib/remoteSensing";
 
-// 8x5 synthetic brightness field representing river, urban blocks, and gradient terrain
 const BASE_SCENE = [
   [0.12, 0.14, 0.42, 0.56, 0.64, 0.72, 0.85, 0.91],
   [0.1, 0.22, 0.48, 0.61, 0.68, 0.75, 0.88, 0.94],
@@ -13,18 +12,18 @@ const BASE_SCENE = [
 ];
 
 const FEATURE_TYPES = [
-  ['water', 'water', 'veg', 'veg', 'veg', 'soil', 'urban', 'urban'],
-  ['water', 'veg', 'veg', 'veg', 'soil', 'soil', 'urban', 'urban'],
-  ['water', 'veg', 'veg', 'soil', 'water', 'water', 'soil', 'urban'],
-  ['veg', 'veg', 'soil', 'soil', 'water', 'water', 'soil', 'soil'],
-  ['veg', 'soil', 'soil', 'soil', 'veg', 'veg', 'soil', 'soil'],
+  ["water", "water", "veg", "veg", "veg", "soil", "urban", "urban"],
+  ["water", "veg", "veg", "veg", "soil", "soil", "urban", "urban"],
+  ["water", "veg", "veg", "soil", "water", "water", "soil", "urban"],
+  ["veg", "veg", "soil", "soil", "water", "water", "soil", "soil"],
+  ["veg", "soil", "soil", "soil", "veg", "veg", "soil", "soil"],
 ] as const;
 
 export const labMeta: LabMeta = {
   id: "sensor-resolution",
   title: "تفکیک‌پذیری سنجنده و SAR",
   summary: "موازنه GSD، عمق بیتی رادیومتری، اپتیکی در برابر رادار فعال و درخواست‌های SAR.",
-  order: 6,
+  order: 7,
 };
 
 export function Lab() {
@@ -33,7 +32,7 @@ export function Lab() {
   const [ifovMrad, setIfovMrad] = useState<number>(0.043);
   const [fovDeg, setFovDeg] = useState<number>(15);
   const [bitDepth, setBitDepth] = useState<number>(8);
-  const [sensorMode, setSensorMode] = useState<'optical' | 'sar'>('optical');
+  const [sensorMode, setSensorMode] = useState<"optical" | "sar">("optical");
   const [isNight, setIsNight] = useState<boolean>(false);
   const [hasClouds, setHasClouds] = useState<boolean>(true);
 
@@ -44,25 +43,23 @@ export function Lab() {
     const feat = FEATURE_TYPES[r][c];
     const isCloudCell = hasClouds && r <= 2 && c >= 1 && c <= 5;
 
-    if (sensorMode === 'optical') {
+    if (sensorMode === "optical") {
       if (isNight) {
-        return { bg: 'rgb(12, 16, 28)', label: 'تاریکی شب (نبود نور خورشید)' };
+        return { bg: "rgb(20, 18, 15)", label: "تاریکی شب (نبود نور خورشید)" };
       }
       if (isCloudCell) {
-        return { bg: 'rgb(241, 245, 249)', label: 'مسدودشده با ابر' };
+        return { bg: "rgb(245, 241, 235)", label: "مسدودشده با ابر" };
       }
       const q = quantizeRadiometric(baseVal, bitDepth);
       const lum = Math.round(q.reconstructed * 255);
       return { bg: `rgb(${lum}, ${lum}, ${lum})`, label: `DN=${q.dn}` };
     }
 
-    // Active SAR Microwave mode: penetrates clouds, works at night
-    // Water = specular dark (~0.08), Veg = volume scatter (~0.48), Soil = (~0.32), Urban = bright double-bounce (~0.95)
     let sarBackscatter = 0.35;
-    if (feat === 'water') sarBackscatter = 0.06;
-    else if (feat === 'veg') sarBackscatter = 0.46;
-    else if (feat === 'soil') sarBackscatter = 0.28;
-    else if (feat === 'urban') sarBackscatter = 0.94;
+    if (feat === "water") sarBackscatter = 0.06;
+    else if (feat === "veg") sarBackscatter = 0.46;
+    else if (feat === "soil") sarBackscatter = 0.28;
+    else if (feat === "urban") sarBackscatter = 0.94;
 
     const q = quantizeRadiometric(sarBackscatter, bitDepth);
     const lum = Math.round(q.reconstructed * 255);
@@ -71,131 +68,133 @@ export function Lab() {
 
   return (
     <div className="flex flex-col gap-5" data-testid="lab-sensor-resolution">
-      {/* Geometry & Spatial/Swath Lab */}
-      <div className="bg-white border border-slate-200 rounded-xl p-4 sm:p-5">
-        <h3 className="text-sm font-semibold text-slate-900 mb-1">
-          محاسبه‌گر هندسه تصویربرداری (تفکیک مکانی و پهنای جاروب)
-        </h3>
-        <p className="text-xs text-slate-500 mb-4">
+      <div className="rounded-xl border border-line bg-paper p-4">
+        <h3 className="text-sm font-semibold">محاسبه‌گر هندسه تصویربرداری (تفکیک مکانی و پهنای جاروب)</h3>
+        <p className="mt-0.5 mb-4 text-xs text-muted">
           تنظیم ارتفاع مداری (H)، زاویه دید لحظه‌ای (IFOV) و میدان دید کل (FOV)
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <div>
-            <div className="flex items-center justify-between text-xs mb-1.5">
-              <label htmlFor="sens-alt-slider" className="font-medium text-slate-800">
-                ارتفاع مدار (H)
-              </label>
-              <span className="font-mono font-semibold text-slate-900" dir="ltr">
+        <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <label className="text-sm">
+            <span className="flex justify-between">
+              <span>ارتفاع مدار (H)</span>
+              <span className="tabular-nums" dir="ltr">
                 {altitudeKm} km
               </span>
-            </div>
+            </span>
             <input
-              id="sens-alt-slider"
               type="range"
               min={400}
               max={1200}
               step={20}
               value={altitudeKm}
               dir="ltr"
-              onChange={(e) => { setAltitudeKm(parseInt(e.target.value, 10)); markLab("sensor-resolution"); }}
-              className="lab-slider w-full"
+              onChange={(e) => {
+                setAltitudeKm(parseInt(e.target.value, 10));
+                markLab("sensor-resolution");
+              }}
+              className="mt-1 h-11 w-full accent-cane"
             />
-          </div>
+          </label>
 
-          <div>
-            <div className="flex items-center justify-between text-xs mb-1.5">
-              <label htmlFor="sens-ifov-slider" className="font-medium text-slate-800">
-                زاویه لحظه‌ای (IFOV)
-              </label>
-              <span className="font-mono font-semibold text-slate-900" dir="ltr">
+          <label className="text-sm">
+            <span className="flex justify-between">
+              <span>زاویه لحظه‌ای (IFOV)</span>
+              <span className="tabular-nums" dir="ltr">
                 {ifovMrad.toFixed(3)} mrad
               </span>
-            </div>
+            </span>
             <input
-              id="sens-ifov-slider"
               type="range"
               min={0.01}
               max={0.15}
               step={0.005}
               value={ifovMrad}
               dir="ltr"
-              onChange={(e) => { setIfovMrad(parseFloat(e.target.value)); markLab("sensor-resolution"); }}
-              className="lab-slider w-full"
+              onChange={(e) => {
+                setIfovMrad(parseFloat(e.target.value));
+                markLab("sensor-resolution");
+              }}
+              className="mt-1 h-11 w-full accent-cane"
             />
-          </div>
+          </label>
 
-          <div>
-            <div className="flex items-center justify-between text-xs mb-1.5">
-              <label htmlFor="sens-fov-slider" className="font-medium text-slate-800">
-                میدان دید سنجنده (FOV)
-              </label>
-              <span className="font-mono font-semibold text-slate-900" dir="ltr">
+          <label className="text-sm">
+            <span className="flex justify-between">
+              <span>میدان دید سنجنده (FOV)</span>
+              <span className="tabular-nums" dir="ltr">
                 {fovDeg}°
               </span>
-            </div>
+            </span>
             <input
-              id="sens-fov-slider"
               type="range"
               min={4}
               max={45}
               step={1}
               value={fovDeg}
               dir="ltr"
-              onChange={(e) => { setFovDeg(parseInt(e.target.value, 10)); markLab("sensor-resolution"); }}
-              className="lab-slider w-full"
+              onChange={(e) => {
+                setFovDeg(parseInt(e.target.value, 10));
+                markLab("sensor-resolution");
+              }}
+              className="mt-1 h-11 w-full accent-cane"
             />
-          </div>
+          </label>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
-            <div className="text-xs text-slate-500">اندازه پیکسل روی زمین (GSD)</div>
-            <div className="text-lg font-semibold font-mono text-slate-900 tabular-nums mt-0.5" dir="ltr">
+        <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="rounded-xl border border-line bg-card px-3 py-3">
+            <dt className="text-xs text-muted">اندازه پیکسل روی زمین (GSD)</dt>
+            <dd className="mt-1 text-lg font-semibold tabular-nums" dir="ltr">
               {geometry.gsdMeters.toFixed(1)} m
-            </div>
+            </dd>
           </div>
-          <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
-            <div className="text-xs text-slate-500">پهنای جاروب (Swath Width)</div>
-            <div className="text-lg font-semibold font-mono text-slate-900 tabular-nums mt-0.5" dir="ltr">
+          <div className="rounded-xl border border-line bg-card px-3 py-3">
+            <dt className="text-xs text-muted">پهنای جاروب (Swath Width)</dt>
+            <dd className="mt-1 text-lg font-semibold tabular-nums" dir="ltr">
               {geometry.swathKm.toFixed(1)} km
-            </div>
+            </dd>
           </div>
-          <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
-            <div className="text-xs text-slate-500">تعداد پیکسل در هر خط اسکن</div>
-            <div className="text-lg font-semibold font-mono text-slate-900 tabular-nums mt-0.5" dir="ltr">
+          <div className="rounded-xl border border-line bg-card px-3 py-3">
+            <dt className="text-xs text-muted">تعداد پیکسل در هر خط اسکن</dt>
+            <dd className="mt-1 text-lg font-semibold tabular-nums" dir="ltr">
               {geometry.pixelsAcrossTrack.toLocaleString()} px
-            </div>
+            </dd>
           </div>
-        </div>
+        </dl>
       </div>
 
-      {/* Radiometric Quantization + Passive Optical vs Active SAR Simulator */}
-      <div className="bg-white border border-slate-200 rounded-xl p-4 sm:p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <div className="rounded-xl border border-line bg-paper p-4">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h3 className="text-sm font-semibold text-slate-900">
+            <h3 className="text-sm font-semibold">
               تفکیک رادیومتری (عمق بیتی) و مقایسه اپتیکی با رادار فعال (SAR)
             </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="mt-0.5 text-xs text-muted">
               تأثیر کاهش بیت بر پله‌ای شدن تصویر و توانایی رادار در عبور از ابر و شب
             </p>
           </div>
-          <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-lg">
+          <div className="inline-flex gap-1 rounded-xl border border-line bg-card p-1">
             <button
               type="button"
-              onClick={() => { setSensorMode("optical"); markLab("sensor-resolution"); }}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 ${
-                sensorMode === 'optical' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              onClick={() => {
+                setSensorMode("optical");
+                markLab("sensor-resolution");
+              }}
+              className={`min-h-9 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap ${
+                sensorMode === "optical" ? "bg-ink text-parchment" : "text-ink-soft hover:bg-paper"
               }`}
             >
               اپتیکی غیرفعال
             </button>
             <button
               type="button"
-              onClick={() => { setSensorMode("sar"); markLab("sensor-resolution"); }}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 ${
-                sensorMode === 'sar' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              onClick={() => {
+                setSensorMode("sar");
+                markLab("sensor-resolution");
+              }}
+              className={`min-h-9 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap ${
+                sensorMode === "sar" ? "bg-ink text-parchment" : "text-ink-soft hover:bg-paper"
               }`}
             >
               رادار فعال SAR
@@ -203,62 +202,68 @@ export function Lab() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-center">
+        <div className="grid grid-cols-1 items-center gap-5 md:grid-cols-2">
           <div>
-            <div className="mb-4">
-              <div className="flex items-center justify-between text-xs mb-1.5">
-                <label htmlFor="sens-bit-slider" className="font-medium text-slate-800">
-                  تفکیک رادیومتری (Bit Depth)
-                </label>
-                <span className="font-mono font-semibold text-slate-900" dir="ltr">
-                  {bitDepth}-bit ({totalLevels} سطح خاکستری)
+            <label className="mb-4 block text-sm">
+              <span className="flex justify-between">
+                <span>تفکیک رادیومتری (Bit Depth)</span>
+                <span className="tabular-nums" dir="ltr">
+                  {bitDepth}-bit ({totalLevels} سطح)
                 </span>
-              </div>
+              </span>
               <input
-                id="sens-bit-slider"
                 type="range"
                 min={1}
                 max={10}
                 step={1}
                 value={bitDepth}
                 dir="ltr"
-                onChange={(e) => { setBitDepth(parseInt(e.target.value, 10)); markLab("sensor-resolution"); }}
-                className="lab-slider w-full"
+                onChange={(e) => {
+                  setBitDepth(parseInt(e.target.value, 10));
+                  markLab("sensor-resolution");
+                }}
+                className="mt-1 h-11 w-full accent-cane"
               />
-            </div>
+            </label>
 
-            <div className="flex flex-col gap-2.5 text-xs text-slate-700">
-              <label className="inline-flex items-center gap-2 cursor-pointer">
+            <div className="flex flex-col gap-2.5 text-xs text-ink-soft">
+              <label className="inline-flex cursor-pointer items-center gap-2">
                 <input
                   type="checkbox"
                   checked={hasClouds}
-                  onChange={(e) => { setHasClouds(e.target.checked); markLab("sensor-resolution"); }}
-                  className="rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+                  onChange={(e) => {
+                    setHasClouds(e.target.checked);
+                    markLab("sensor-resolution");
+                  }}
+                  className="size-4 accent-cane"
                 />
                 <span>وجود توده ابر متراکم بر فراز منطقه</span>
               </label>
 
-              <label className="inline-flex items-center gap-2 cursor-pointer">
+              <label className="inline-flex cursor-pointer items-center gap-2">
                 <input
                   type="checkbox"
                   checked={isNight}
-                  onChange={(e) => { setIsNight(e.target.checked); markLab("sensor-resolution"); }}
-                  className="rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+                  onChange={(e) => {
+                    setIsNight(e.target.checked);
+                    markLab("sensor-resolution");
+                  }}
+                  className="size-4 accent-cane"
                 />
                 <span>تصویربرداری در نیمه‌شب (نبود تابش خورشیدی)</span>
               </label>
             </div>
 
-            <div className="mt-4 p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-600 leading-relaxed">
-              {sensorMode === 'optical'
+            <div className="mt-4 rounded-xl border border-line bg-card p-3 text-xs leading-relaxed text-ink-soft">
+              {sensorMode === "optical"
                 ? hasClouds || isNight
-                  ? '▲ محدودیت سنجنده غیرفعال: در شب یا زیر پوشش ابر، سیگنال بازتابی سطح زمین به سنجنده اپتیکی نمی‌رسد.'
-                  : '✓ سنجنده اپتیکی در روز صاف: تغییر عمق بیتی را از ۱ تا ۱۰ بیت جابه‌جا کنید تا از بین رفتن جزئیات در ۱ و ۲ بیت را ببینید.'
-                : '✓ رادار فعال SAR: موج ریزموج از ابر عبور می‌کند و مستقل از خورشید است؛ رودخانه (بازتاب آینه‌ای) سیاه و بلوک شهری (پس‌پراکنش گوشه‌ای) روشن دیده می‌شود.'}
+                  ? "محدودیت سنجنده غیرفعال: در شب یا زیر پوشش ابر، سیگنال بازتابی سطح زمین به سنجنده اپتیکی نمی‌رسد."
+                  : "سنجنده اپتیکی در روز صاف: تغییر عمق بیتی را از ۱ تا ۱۰ بیت جابه‌جا کنید تا از بین رفتن جزئیات در ۱ و ۲ بیت را ببینید."
+                : "رادار فعال SAR: موج ریزموج از ابر عبور می‌کند و مستقل از خورشید است؛ رودخانه (بازتاب آینه‌ای) سیاه و بلوک شهری (پس‌پراکنش گوشه‌ای) روشن دیده می‌شود."}
             </div>
           </div>
 
-          <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
+          <div className="rounded-xl border border-line bg-ink p-3">
             <div className="grid grid-cols-8 gap-1">
               {BASE_SCENE.map((row, rIdx) =>
                 row.map((val, cIdx) => {
@@ -267,16 +272,18 @@ export function Lab() {
                     <div
                       key={`${rIdx}-${cIdx}`}
                       title={cell.label}
-                      className="h-9 rounded-xs transition-colors"
+                      className="h-9 rounded-sm transition-colors"
                       style={{ backgroundColor: cell.bg }}
                     />
                   );
-                })
+                }),
               )}
             </div>
-            <div className="flex items-center justify-between text-[11px] text-slate-400 mt-2.5 font-mono" dir="ltr">
-              <span>{sensorMode === 'optical' ? 'OPTICAL VIS/NIR' : 'ACTIVE C-BAND SAR'}</span>
-              <span>{bitDepth}-BIT · {totalLevels} DN</span>
+            <div className="mt-2.5 flex items-center justify-between text-[11px] text-parchment/75 tabular-nums" dir="ltr">
+              <span>{sensorMode === "optical" ? "OPTICAL VIS/NIR" : "ACTIVE C-BAND SAR"}</span>
+              <span>
+                {bitDepth}-BIT · {totalLevels} DN
+              </span>
             </div>
           </div>
         </div>
