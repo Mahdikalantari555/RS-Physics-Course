@@ -174,7 +174,14 @@ export default defineConfig(({ command, isPreview }) => ({
             // (e.g. GitHub Pages via `scripts/build-pages.mjs`) override this
             // with NITRO_PRESET=github-pages.
             preset: process.env.NITRO_PRESET || "node-server",
-            serverDir: "./server",
+            // The Grok platform server middleware (server/middleware/grok-pwa.ts)
+            // is only needed for the node-server/Vercel build. Static hosts skip
+            // `serverDir` so that middleware (and its prerender-time `?raw`
+            // import, which breaks the static prerender) is never scanned.
+            ...(process.env.NITRO_PRESET === "github-pages" ||
+            process.env.NITRO_PRESET === "static"
+              ? {}
+              : { serverDir: "./server" }),
           }),
         ]
       : []),

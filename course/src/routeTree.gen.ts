@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as GuideRouteImport } from './routes/guide'
 import { Route as ExamsIndexRouteImport } from './routes/exams/index'
 import { Route as ExamsIdRouteImport } from './routes/exams/$id'
+import { Route as FormulasIndexRouteImport } from './routes/formulas/index'
 import { Route as LabsIndexRouteImport } from './routes/labs/index'
 import { Route as LabsIdRouteImport } from './routes/labs/$id'
 import { Route as LessonsIndexRouteImport } from './routes/lessons/index'
@@ -40,6 +41,11 @@ const ExamsIndexRoute = ExamsIndexRouteImport.update({
 const ExamsIdRoute = ExamsIdRouteImport.update({
   id: '/exams/$id',
   path: '/exams/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FormulasIndexRoute = FormulasIndexRouteImport.update({
+  id: '/formulas/',
+  path: '/formulas/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LabsIndexRoute = LabsIndexRouteImport.update({
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/math/$slug': typeof MathSlugRoute
   '/solve/$slug': typeof SolveSlugRoute
   '/exams/': typeof ExamsIndexRoute
+  '/formulas/': typeof FormulasIndexRoute
   '/labs/': typeof LabsIndexRoute
   '/lessons/': typeof LessonsIndexRoute
   '/math/': typeof MathIndexRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/math/$slug': typeof MathSlugRoute
   '/solve/$slug': typeof SolveSlugRoute
   '/exams': typeof ExamsIndexRoute
+  '/formulas': typeof FormulasIndexRoute
   '/labs': typeof LabsIndexRoute
   '/lessons': typeof LessonsIndexRoute
   '/math': typeof MathIndexRoute
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   '/math/$slug': typeof MathSlugRoute
   '/solve/$slug': typeof SolveSlugRoute
   '/exams/': typeof ExamsIndexRoute
+  '/formulas/': typeof FormulasIndexRoute
   '/labs/': typeof LabsIndexRoute
   '/lessons/': typeof LessonsIndexRoute
   '/math/': typeof MathIndexRoute
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
     | '/math/$slug'
     | '/solve/$slug'
     | '/exams/'
+    | '/formulas/'
     | '/labs/'
     | '/lessons/'
     | '/math/'
@@ -151,6 +161,7 @@ export interface FileRouteTypes {
     | '/math/$slug'
     | '/solve/$slug'
     | '/exams'
+    | '/formulas'
     | '/labs'
     | '/lessons'
     | '/math'
@@ -165,6 +176,7 @@ export interface FileRouteTypes {
     | '/math/$slug'
     | '/solve/$slug'
     | '/exams/'
+    | '/formulas/'
     | '/labs/'
     | '/lessons/'
     | '/math/'
@@ -180,6 +192,7 @@ export interface RootRouteChildren {
   MathSlugRoute: typeof MathSlugRoute
   SolveSlugRoute: typeof SolveSlugRoute
   ExamsIndexRoute: typeof ExamsIndexRoute
+  FormulasIndexRoute: typeof FormulasIndexRoute
   LabsIndexRoute: typeof LabsIndexRoute
   LessonsIndexRoute: typeof LessonsIndexRoute
   MathIndexRoute: typeof MathIndexRoute
@@ -214,6 +227,13 @@ declare module '@tanstack/react-router' {
       path: '/exams/$id'
       fullPath: '/exams/$id'
       preLoaderRoute: typeof ExamsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/formulas/': {
+      id: '/formulas/'
+      path: '/formulas'
+      fullPath: '/formulas/'
+      preLoaderRoute: typeof FormulasIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/labs/': {
@@ -284,6 +304,7 @@ const rootRouteChildren: RootRouteChildren = {
   MathSlugRoute: MathSlugRoute,
   SolveSlugRoute: SolveSlugRoute,
   ExamsIndexRoute: ExamsIndexRoute,
+  FormulasIndexRoute: FormulasIndexRoute,
   LabsIndexRoute: LabsIndexRoute,
   LessonsIndexRoute: LessonsIndexRoute,
   MathIndexRoute: MathIndexRoute,
