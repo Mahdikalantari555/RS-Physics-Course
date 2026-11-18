@@ -13,7 +13,6 @@ out/
 .netlify/
 
 # Generated / cache
-.grok/
 .tanstack/
 .cache/
 .parcel-cache/
@@ -43,11 +42,5 @@ Thumbs.db
 coverage/
 .nyc_output/
 
-# Large generated assets / screenshots / attachments (not source)
-grok/screenshots/
-grok/attachments/
-grok/.vercel/
-grok/public/__grok/
-grok/public/og.jpg
-googlestudio/**/.aistudio/
-googlestudio/**/node_modules/
+# Local memory database
+.memdb/
