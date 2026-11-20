@@ -7,7 +7,7 @@ export const spectralGs: Lesson = {
   order: 10,
   summary:
     "رفتار نوری برگ سبز (لبه قرمز)، خاک، آب و برف و ساخت ترکیب‌های رنگی کاذب",
-  prerequisites: ["atmosphere-gs"],
+  prerequisites: ["normalized-algebra"],
   blocks: [
     {
       type: "p",

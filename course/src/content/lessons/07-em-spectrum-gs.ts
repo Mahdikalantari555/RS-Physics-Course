@@ -7,7 +7,7 @@ export const emSpectrumGs: Lesson = {
   order: 7,
   summary:
     "رابطه طول‌موج، فرکانس و انرژی فوتون از فرابنفش تا ریزموج، و پای آن بر اندازه پیکسل.",
-  prerequisites: ["introduction"],
+  prerequisites: ["scientific-powers"],
   blocks: [
     {
       type: "p",

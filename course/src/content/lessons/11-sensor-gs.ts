@@ -7,7 +7,7 @@ export const sensorGs: Lesson = {
   order: 11,
   summary:
     "موازنه GSD و پهنای جاروب، کوانتیزاسیون رادیومتری و سنجش فعال ریزموج",
-  prerequisites: ["em-spectrum-gs"],
+  prerequisites: ["solving"],
   blocks: [
     {
       type: "p",
