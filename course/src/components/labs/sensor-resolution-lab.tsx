@@ -22,7 +22,7 @@ const FEATURE_TYPES = [
 export const labMeta: LabMeta = {
   id: "sensor-resolution",
   title: "تفکیک‌پذیری سنجنده و SAR",
-  summary: "موازنه GSD، عمق بیتی رادیومتری، اپتیکی در برابر رادار فعال و درخواست‌های SAR.",
+  summary: "موازنه GSD، عمق بیتی رادیومتری، اپتیکی در برابر رادار فعال و پس‌پراکنش SAR.",
   order: 7,
 };
 

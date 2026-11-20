@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/course/shell";
-import { primers } from "@/content/load";
+import { primers, problems } from "@/content/load";
+import { faInt } from "@/lib/format";
 import {
   MATH_SYMBOL_CATEGORIES,
   MATHEMATICAL_SYMBOLS_TABLE,
@@ -40,7 +41,7 @@ function MathIndex() {
           to="/solve"
           className="inline-flex min-h-11 items-center rounded-full border border-line bg-card px-4 text-sm text-ink hover:border-cane"
         >
-          ده حل عددی کامل
+          {faInt(problems.length)} حل عددی کامل
         </Link>
       </div>
 

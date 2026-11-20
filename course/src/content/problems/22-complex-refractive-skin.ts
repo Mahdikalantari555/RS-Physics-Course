@@ -38,4 +38,5 @@ export const complexRefractiveSkin: Problem = {
   meaning: "در محیط‌های با تلفات، شدت (مربع دامنه) دو برابر سریع‌تر از دامنه میدان الکتریکی تضعیف می‌شود.",
   traps: ["فراموش کردن ضریب ۲ در توان نمایی شدت $\\exp(-2k'' z)$ نسبت به دامنه."],
   relatedMath: ["exponentials", "solving"],
+  relatedLabs: ["wave"],
 };

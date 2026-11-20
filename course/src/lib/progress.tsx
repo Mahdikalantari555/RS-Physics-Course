@@ -50,7 +50,11 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!ready) return;
-    localStorage.setItem(KEY, JSON.stringify(data));
+    try {
+      localStorage.setItem(KEY, JSON.stringify(data));
+    } catch {
+      /* ignore quota / private-mode storage errors */
+    }
   }, [data, ready]);
 
   const api = useMemo<Api>(

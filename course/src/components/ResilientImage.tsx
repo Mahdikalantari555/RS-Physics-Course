@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Satellite } from "lucide-react";
+import { resolveAssetUrl } from "@/lib/base-path";
 
 interface ResilientImageProps {
   src: string;
@@ -9,7 +10,12 @@ interface ResilientImageProps {
 }
 
 export function ResilientImage({ src, alt, caption, className = "" }: ResilientImageProps) {
+  const resolvedSrc = resolveAssetUrl(src);
   const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    setFailed(false);
+  }, [resolvedSrc]);
 
   if (failed) {
     return (
@@ -26,7 +32,7 @@ export function ResilientImage({ src, alt, caption, className = "" }: ResilientI
 
   return (
     <img
-      src={src}
+      src={resolvedSrc}
       alt={alt}
       referrerPolicy="no-referrer"
       onError={() => setFailed(true)}

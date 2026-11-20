@@ -37,4 +37,5 @@ export const blackbodyRatio3006000: Problem = {
   meaning: "به همین دلیل در سنجش مایکروویو، تابش حرارتی خود زمین قابل‌توجه است، اما در نور مرئی فقط بازتاب خورشید را می‌بینیم.",
   traps: ["به کار بردن تقریب ریلی–جینز در طول‌موج ۱ میکرومتر."],
   relatedMath: ["exponentials"],
+  relatedLabs: ["blackbody"],
 };

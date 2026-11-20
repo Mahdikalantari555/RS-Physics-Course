@@ -1,9 +1,9 @@
-import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { createRootRoute, HeadContent, Link, Outlet, Scripts } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { Shell } from "@/components/course/shell";
 import { ProgressProvider } from "@/lib/progress";
-import { Link } from "@tanstack/react-router";
+import { resolveAssetUrl } from "@/lib/base-path";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
@@ -19,10 +19,10 @@ export const Route = createRootRoute({
       { name: "theme-color", content: "#f3eee6" },
     ],
     links: [
-      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
-      { rel: "stylesheet", href: appCss },
-      { rel: "manifest", href: "/__grok/manifest.webmanifest" },
-      { rel: "apple-touch-icon", href: "/__grok/icon-180.png" },
+      { rel: "icon", type: "image/svg+xml", href: resolveAssetUrl("/favicon.svg") },
+      { rel: "stylesheet", href: resolveAssetUrl(appCss) },
+      { rel: "manifest", href: resolveAssetUrl("/manifest.webmanifest") },
+      { rel: "apple-touch-icon", href: resolveAssetUrl("/__grok/icon-180.png") },
     ],
   }),
   component: Root,

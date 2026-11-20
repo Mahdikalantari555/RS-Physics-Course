@@ -11,7 +11,9 @@
   "scripts": {
     "dev": "npm run dev --workspace=course",
     "build": "npm run build --workspace=course",
-    "start": "PORT=3000 HOST=0.0.0.0 node course/.output/server/index.mjs",
+    "build:server": "npm run build:server --workspace=course",
+    "start": "PORT=3000 HOST=0.0.0.0 node course/scripts/serve-static.mjs",
+    "start:server": "PORT=3000 HOST=0.0.0.0 node course/.output/server/index.mjs",
     "lint": "npm run lint --workspace=course",
     "typecheck": "npm run typecheck --workspace=course",
     "preview": "npm run preview --workspace=course"

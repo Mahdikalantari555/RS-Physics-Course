@@ -44,4 +44,5 @@ export const soilMoistureDielectric: Problem = {
     "فراموش کردن جذر گرفتن از $\\varepsilon_r$ در فرمول فرنل؛ ضریب شکست $n = \\sqrt{\\varepsilon_r}$ است نه خود $\\varepsilon_r$.",
   ],
   relatedMath: ["solving"],
+  relatedLabs: ["sensor-resolution"],
 };

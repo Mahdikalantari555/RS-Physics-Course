@@ -1,0 +1,18 @@
+{
+  "name": "فیزیک سنجش از دور",
+  "short_name": "سنجش از دور",
+  "description": "کورس تعاملی فیزیک سنجش از دور: فرمول کلیک‌پذیر، ریاضی درجا، آزمایشگاه و آزمون.",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f3eee6",
+  "theme_color": "#f3eee6",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

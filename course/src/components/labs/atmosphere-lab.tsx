@@ -75,7 +75,7 @@ export function Lab() {
 
   const toX = (wUm: number) => {
     const l = Math.log10(Math.max(0.3, Math.min(15.0, wUm)));
-    return padL + ((l - MIN_LOG) / (MAX_LOG - MIN_LOG)) * plotW;
+    return Math.round((padL + ((l - MIN_LOG) / (MAX_LOG - MIN_LOG)) * plotW) * 100) / 100;
   };
 
   const windowPoints = useMemo(() => {

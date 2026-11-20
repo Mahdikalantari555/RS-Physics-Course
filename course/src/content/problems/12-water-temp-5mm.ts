@@ -44,4 +44,5 @@ export const waterTemp5mm: Problem = {
     "استفاده از رابطه فروسرخ حرارتی $T_B = \\varepsilon^{1/4} T$ در باند مایکروویو؛ در مایکروویو تقریب ریلی–جینز برقرار است و توان ۱/۴ نداریم.",
   ],
   relatedMath: ["solving"],
+  relatedLabs: ["blackbody"],
 };

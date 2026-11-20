@@ -9,18 +9,22 @@ export const Route = createFileRoute("/solve/")({
   head: () => ({ meta: [{ title: "حل مسئله · فیزیک سنجش از دور" }] }),
 });
 
-const topics = ["موج", "تابش", "سطح", "جو", "مدار"];
+const PREFERRED_TOPICS = ["موج", "تابش", "سطح", "جو", "اتمسفر", "مایکروویو", "مدار"];
 
 function SolveIndex() {
   const { data, ready } = useProgress();
   const done = problems.filter((item) => data.problems[item.slug]).length;
+  const extraTopics = Array.from(new Set(problems.map((item) => item.topic))).filter(
+    (topic) => !PREFERRED_TOPICS.includes(topic),
+  );
+  const topics = [...PREFERRED_TOPICS, ...extraTopics];
 
   return (
     <Shell>
       <p className="text-sm font-medium text-cane">از داده تا عدد، با واحد</p>
       <h1 className="mt-2 text-3xl font-semibold">حل مسئله</h1>
       <p className="mt-3 max-w-2xl text-lg leading-relaxed text-ink-soft">
-        ده صحنه‌ی واقعی. هر کدام فرمول اساسی را جزءبه‌جزء باز می‌کند، حساب را نشان می‌دهد، و می‌گوید جواب در تصویر ماهواره‌ای چه معنایی دارد. ثابت‌ها همان‌هایی است که در آزمایش‌ها استفاده شده.
+        {faInt(problems.length)} صحنه‌ی واقعی. هر کدام فرمول اساسی را جزءبه‌جزء باز می‌کند، حساب را نشان می‌دهد، و می‌گوید جواب در تصویر ماهواره‌ای چه معنایی دارد. ثابت‌ها همان‌هایی است که در آزمایش‌ها استفاده شده.
       </p>
       <p className="mt-3 text-sm text-muted">
         {ready ? `${faInt(done)} از ${faInt(problems.length)} خوانده شده` : "پیشرفت بعد از بار شدن صفحه می‌آید"}

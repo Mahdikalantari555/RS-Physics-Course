@@ -6,7 +6,7 @@ export const kirchhoff: Formula = {
   id: "kirchhoff",
   title: "قانون کیرشهف و تعادل تابشی",
   summary:
-    "در تعادل ترمودینامیکی، مجموع کسری از شار فرودی که جذب، بازتاب یا عبور می‌کند برابر ۱ است و گسیلندگی برابر جذرپذیری است.",
+    "در تعادل ترمودینامیکی، مجموع کسری از شار فرودی که جذب، بازتاب یا عبور می‌کند برابر ۱ است و گسیلندگی برابر جذب‌پذیری است.",
   tokens: [
     sym("alpha", "\\alpha_{\\lambda}"),
     tex("+"),
@@ -22,7 +22,7 @@ export const kirchhoff: Formula = {
     {
       id: "alpha",
       latex: "\\alpha_{\\lambda}",
-      name: "ضریب جذرپذیری طیفی (Absorptivity)",
+      name: "ضریب جذب‌پذیری طیفی (Absorptivity)",
       kind: "var",
       unitOrValue: "بی‌بعد (بین 0 تا 1)",
       explanation:
@@ -37,7 +37,7 @@ export const kirchhoff: Formula = {
       unitOrValue: "بی‌بعد (بین 0 تا 1)",
       explanation:
         "کسری از شار تابشی فرودی که از سطح بازتاب می‌شود. برای اجسام کدر که عبور ندارند (τ = 0)، داریم ρ = 1 − α.",
-      mathRole: "مکمل جذرپذیری در سطوح کدر.",
+      mathRole: "مکمل جذب‌پذیری در سطوح کدر.",
     },
     {
       id: "tau",
@@ -64,5 +64,5 @@ export const kirchhoff: Formula = {
   ],
   derivationNotes:
     "از اصل پایستگی انرژی برای شار فرودی Φ_i داریم Φ_i = Φ_a + Φ_r + Φ_t که با تقسیم بر Φ_i رابطه α + ρ + τ = 1 به‌دست می‌آید. در محفظه عایق با تعادل ترمودینامیکی، شار خالص عبوری از هر سطح صفر است و لذا ε_λ = α_λ نتیجه می‌شود.",
-  relatedLabs: ["blackbody", "spectral-signature"],
+  relatedLabs: ["blackbody", "spectral-signatures"],
 };

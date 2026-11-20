@@ -40,6 +40,6 @@ export const scientificPowers: Primer = {
       text: "تبدیل طول‌موج‌های سنجنده (مثل ۰٫۵۵ μm) به بسامد (545 THz) و انرژی فوتون مستقیماً با همین قواعد توان پایه ۱۰ انجام می‌شود.",
     },
     { type: "formula", id: "wave-speed" },
-    { type: "problem", id: "photon-budget" },
+    { type: "problem", id: "photon-bands" },
   ],
 };

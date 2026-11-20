@@ -38,4 +38,5 @@ export const wienFreqVsLambda: Problem = {
   meaning: "قله منحنی پلانک به نحوه نمایش محور افقی (طول‌موج یا بسامد) وابسته است.",
   traps: ["تصور اینکه $c / f_{\\max}$ برابر $\\lambda_{\\max}$ است."],
   relatedMath: ["derivatives", "solving"],
+  relatedLabs: ["blackbody"],
 };

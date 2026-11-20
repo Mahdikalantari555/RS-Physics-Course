@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-18T07:25:01.539Z",
-  "preset": "node-server",
+  "date": "2026-11-20T14:00:20.949Z",
+  "preset": "github-pages",
   "framework": {
     "name": "nitro",
     "version": "3.0.260610-beta"
@@ -11,7 +11,8 @@
   "serverEntry": "server/index.mjs",
   "publicDir": "public",
   "commands": {
-    "preview": "node ./server/index.mjs"
+    "preview": "npx serve ./public",
+    "deploy": "npx gh-pages --dotfiles -d ./public"
   },
   "config": {}
 }

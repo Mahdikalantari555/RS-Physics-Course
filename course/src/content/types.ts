@@ -112,7 +112,7 @@ export type Problem = {
   meaning: string;
   traps: string[];
   relatedMath: string[];
-  relatedLabs: string[];
+  relatedLabs?: string[];
 };
 
 export function isFormula(value: unknown): value is Formula {

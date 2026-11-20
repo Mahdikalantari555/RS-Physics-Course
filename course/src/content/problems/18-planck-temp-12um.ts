@@ -39,4 +39,5 @@ export const planckTemp12um: Problem = {
   meaning: "این همان روشی است که سنجنده‌های حرارتی برای تبدیل عدد دیجیتال کالیبره‌شده به نقشه دمای سطح زمین به کار می‌برند.",
   traps: ["فراموش کردن تقسیم تابندگی بر گسیلندگی پیش از معکوس کردن پلانک."],
   relatedMath: ["exponentials", "solving"],
+  relatedLabs: ["blackbody"],
 };

@@ -40,4 +40,5 @@ export const solarRmsFields: Problem = {
   meaning: "نور خورشید با وجود شدت بالا، میدان مغناطیسی بسیار ضعیفی در مقایسه با میدان مغناطیسی زمین (~۵۰ میکروتسلا) دارد.",
   traps: ["فراموش کردن ریشه گرفتن یا استفاده از $\\varepsilon_0$ بدون $c$."],
   relatedMath: ["solving"],
+  relatedLabs: ["wave"],
 };

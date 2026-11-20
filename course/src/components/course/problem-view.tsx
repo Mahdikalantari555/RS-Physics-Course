@@ -130,9 +130,9 @@ export function ProblemView({ problem }: { problem: Problem }) {
         </ul>
       </section>
 
-      {problem.relatedMath.length > 0 || problem.relatedLabs.length > 0 ? (
+      {(problem.relatedMath?.length ?? 0) > 0 || (problem.relatedLabs?.length ?? 0) > 0 ? (
         <div className="mt-8 flex flex-col gap-1 text-sm">
-          {problem.relatedMath.map((slug) => {
+          {(problem.relatedMath ?? []).map((slug) => {
             const primer = getPrimer(slug);
             if (!primer) return null;
             return (
@@ -141,7 +141,7 @@ export function ProblemView({ problem }: { problem: Problem }) {
               </Link>
             );
           })}
-          {problem.relatedLabs.map((id) => {
+          {(problem.relatedLabs ?? []).map((id) => {
             const lab = getLab(id);
             if (!lab) return null;
             return (

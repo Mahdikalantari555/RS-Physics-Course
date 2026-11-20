@@ -34,4 +34,5 @@ export const emissivityRatio1cm: Problem = {
   meaning: "سطحی که گسیلندگی کمتری دارد، برای داشتن همان دمای درخشندگی باید دمای فیزیکی بالاتری داشته باشد.",
   traps: ["معکوس کردن نسبت گسیلندگی و نوشتن ۰٫۸۵ به جای ۱/۰٫۸۵."],
   relatedMath: ["solving"],
+  relatedLabs: ["blackbody"],
 };

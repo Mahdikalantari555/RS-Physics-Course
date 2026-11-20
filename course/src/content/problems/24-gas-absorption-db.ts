@@ -39,4 +39,5 @@ export const gasAbsorptionDb: Problem = {
   meaning: "ضریب جذب ۱۰۰ متر معکوس بسیار بزرگ است و نشان می‌دهد موج در چند سانتی‌متر کاملاً جذب می‌شود.",
   traps: ["فراموش کردن ضریب ۴٫۳۴۳ (تبدیل لگاریتم طبیعی به لگاریتم پایه ۱۰)."],
   relatedMath: ["exponentials"],
+  relatedLabs: ["atmosphere"],
 };

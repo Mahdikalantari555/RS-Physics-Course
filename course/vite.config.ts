@@ -1,5 +1,6 @@
 import { readdirSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { Plugin } from "vite";
 import { defineConfig } from "vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
@@ -142,49 +143,81 @@ function authPopupPlugin(): Plugin {
   };
 }
 
+/**
+ * Work around a Nitro v3 + Vite 8 issue on static presets (`static`,
+ * `github-pages`): Nitro invokes `builder.build(environments.nitro)` even when
+ * no server entry is defined, causing Vite 8 to fall back to `index.html` and
+ * fail with "rolldownOptions.input should not be an html file when building for
+ * SSR". Giving the `nitro` environment an empty JS entry lets the static build
+ * complete cleanly with exit code 0.
+ */
+function staticNitroEntryPlugin(rootDir: string): Plugin {
+  const staticEntry = join(rootDir, "scripts/static-entry.mjs");
+  return {
+    name: "course:static-nitro-entry",
+    enforce: "post",
+    configEnvironment(name, config) {
+      if (name !== "nitro") return;
+      config.build ??= {};
+      const rolldownOpts = (config.build as { rolldownOptions?: { input?: unknown } }).rolldownOptions;
+      if (rolldownOpts && !rolldownOpts.input) {
+        rolldownOpts.input = staticEntry;
+      }
+      config.build.rollupOptions ??= {};
+      if (!config.build.rollupOptions.input) {
+        config.build.rollupOptions.input = staticEntry;
+      }
+    },
+  };
+}
+
 // `0.0.0.0:3000` is the AI Studio preview contract.
-export default defineConfig(({ command, isPreview }) => ({
-  server: {
-    host: "0.0.0.0",
-    port: 3000,
-    strictPort: true,
-    // Live-preview proxies must be accepted.
-    allowedHosts: true,
-  },
-  preview: {
-    host: "127.0.0.1",
-    port: 8081,
-    strictPort: true,
-  },
-  resolve: { tsconfigPaths: true },
-  plugins: [
-    pgliteBootstrapPlugin(),
-    // Before tanstackStart so /auth/popup never falls through to the SPA.
-    authPopupPlugin(),
-    // Dev-only /__app-env, read by scripts/check-auth-invariant.mjs.
-    appEnvPlugin(),
-    // PWA head + ?install=1 tutorial page; runs before Start/Nitro.
-    grokPwaPlugin(),
-    tailwindcss(),
-    tanstackStart(),
-    ...(command === "build" || isPreview
-      ? [
-          nitro({
-            // `node-server` for the normal build/preview; static hosts
-            // (e.g. GitHub Pages via `scripts/build-pages.mjs`) override this
-            // with NITRO_PRESET=github-pages.
-            preset: process.env.NITRO_PRESET || "node-server",
-            // The Grok platform server middleware (server/middleware/grok-pwa.ts)
-            // is only needed for the node-server/Vercel build. Static hosts skip
-            // `serverDir` so that middleware (and its prerender-time `?raw`
-            // import, which breaks the static prerender) is never scanned.
-            ...(process.env.NITRO_PRESET === "github-pages" ||
-            process.env.NITRO_PRESET === "static"
-              ? {}
-              : { serverDir: "./server" }),
-          }),
-        ]
-      : []),
-    viteReact(),
-  ],
-}));
+export default defineConfig(({ command, isPreview }) => {
+  const nitroPreset = process.env.NITRO_PRESET || "node-server";
+  const isStaticPreset = nitroPreset === "github-pages" || nitroPreset === "static";
+  const disableGrokPwa = process.env.DISABLE_GROK_PWA === "1" || isStaticPreset;
+
+  return {
+    server: {
+      host: "0.0.0.0",
+      port: 3000,
+      strictPort: true,
+      // Live-preview proxies must be accepted.
+      allowedHosts: true,
+    },
+    preview: {
+      host: "0.0.0.0",
+      port: 8081,
+      strictPort: true,
+      allowedHosts: true,
+    },
+    resolve: { tsconfigPaths: true },
+    plugins: [
+      pgliteBootstrapPlugin(),
+      // Before tanstackStart so /auth/popup never falls through to the SPA.
+      authPopupPlugin(),
+      // Dev-only /__app-env, read by scripts/check-auth-invariant.mjs.
+      appEnvPlugin(),
+      // Optional Grok PWA head + ?install=1 tutorial page; disabled for the
+      // standalone course dev/preview/static builds.
+      ...(disableGrokPwa ? [] : [grokPwaPlugin()]),
+      tailwindcss(),
+      tanstackStart(),
+      ...(command === "build" || isPreview
+        ? [
+            nitro({
+              // `node-server` for the server build; static hosts override this
+              // with NITRO_PRESET=static or NITRO_PRESET=github-pages.
+              preset: nitroPreset,
+              // The Grok platform server middleware (server/middleware/grok-pwa.ts)
+              // is only needed for the node-server/Vercel build. Static hosts skip
+              // `serverDir` so that middleware is never scanned.
+              ...(isStaticPreset ? {} : { serverDir: "./server" }),
+            }),
+            ...(isStaticPreset ? [staticNitroEntryPlugin(dirname(fileURLToPath(import.meta.url)))] : []),
+          ]
+        : []),
+      viteReact(),
+    ],
+  };
+});

@@ -7,11 +7,12 @@
     "nf3": "0.3.17"
   },
   "scripts": {
-    "dev": "node scripts/with-app-env.mjs vite dev --host 0.0.0.0 --port 3000",
-    "build": "node scripts/with-app-env.mjs vite build && npm run db:migrate",
+    "dev": "DISABLE_GROK_PWA=1 node scripts/with-app-env.mjs vite dev --host 0.0.0.0 --port 3000",
+    "build": "NITRO_PRESET=static VITE_AUTH_ENABLED=false DISABLE_GROK_PWA=1 vite build",
+    "build:server": "node scripts/with-app-env.mjs vite build && npm run db:migrate",
     "db:migrate": "node scripts/migrate.mjs",
-    "build:dev": "node scripts/with-app-env.mjs vite build --mode development",
-    "preview": "node scripts/with-app-env.mjs vite preview",
+    "build:dev": "DISABLE_GROK_PWA=1 node scripts/with-app-env.mjs vite build --mode development",
+    "preview": "DISABLE_GROK_PWA=1 node scripts/with-app-env.mjs vite preview",
     "preview:restart": "node scripts/preview.mjs restart",
     "preview:stop": "node scripts/preview.mjs stop",
     "typecheck": "tsc --noEmit",
