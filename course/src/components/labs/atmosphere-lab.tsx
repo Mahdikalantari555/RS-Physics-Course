@@ -9,8 +9,6 @@ import {
   mieRelativeScattering,
   rayleighRelativeScattering,
 } from "@/lib/remoteSensing";
-import { ResilientImage } from "@/components/ResilientImage";
-import atmosphereDiagramUrl from "@/assets/images/concept_atmospheric_scattering_1794852109849.jpg";
 
 export const labMeta: LabMeta = {
   id: "atmosphere",
@@ -24,7 +22,7 @@ const MAX_LOG = Math.log10(15.0);
 const TICKS = [0.4, 0.7, 1.0, 1.6, 2.2, 4.0, 6.3, 10.0, 14.0];
 
 export function Lab() {
-  const [tab, setTab] = useState<"windows" | "beer" | "diagram">("windows");
+  const [tab, setTab] = useState<"windows" | "beer">("windows");
 
   // Tab 1: Spectral atmospheric windows + Rayleigh/Mie scattering
   const [probeUm, setProbeUm] = useState(0.48);
@@ -119,9 +117,6 @@ export function Lab() {
           </TabButton>
           <TabButton active={tab === "beer"} onClick={() => setTab("beer")}>
             مدل یک‌لایه بیر–لامبرت
-          </TabButton>
-          <TabButton active={tab === "diagram"} onClick={() => setTab("diagram")}>
-            شمای لایه‌های جو
           </TabButton>
         </div>
       </div>
@@ -379,16 +374,6 @@ export function Lab() {
                 ? "سطح تیره‌تر از چیزی است که سنجنده می‌بیند: نور مسیر روشنایی اضافه کرده."
                 : "سطح روشن‌تر از چیزی است که سنجنده می‌بیند: عبور، بخشی از نور را برده."}
           </p>
-        </div>
-      )}
-
-      {tab === "diagram" && (
-        <div className="overflow-hidden rounded-xl border border-line bg-paper">
-          <ResilientImage
-            src={atmosphereDiagramUrl}
-            alt="مقطع لایه‌های جو و پراکندگی تابش خورشیدی"
-            className="h-64 w-full object-cover"
-          />
         </div>
       )}
     </div>

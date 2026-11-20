@@ -18,8 +18,6 @@ import {
 } from "@/lib/satellite-scene";
 import type { LabMeta } from "@/content/types";
 import { useProgress } from "@/lib/progress";
-import { ResilientImage } from "@/components/ResilientImage";
-import leafImageUrl from "@/assets/images/concept_spectral_leaf_1794852109885.jpg";
 
 const SURFACES: Array<{ id: LandCoverId; labelFa: string; color: string }> = [
   { id: "healthy-veg", labelFa: "پوشش گیاهی سالم", color: "#1f6b4a" },
@@ -46,7 +44,7 @@ export const labMeta: LabMeta = {
 export function Lab() {
   const { markLab } = useProgress();
   const [selectedSurface, setSelectedSurface] = useState<LandCoverId>("healthy-veg");
-  const [tab, setTab] = useState<"curves" | "composite" | "leaf">("curves");
+  const [tab, setTab] = useState<"curves" | "composite">("curves");
   const [composite, setComposite] = useState<CompositeId>("true-color");
   const [showOutline, setShowOutline] = useState<boolean>(false);
   const [hoveredPixel, setHoveredPixel] = useState<PixelInspection | null>(null);
@@ -124,15 +122,6 @@ export function Lab() {
             }`}
           >
             ترکیب رنگی ماهواره
-          </button>
-          <button
-            type="button"
-            onClick={() => setTab("leaf")}
-            className={`min-h-10 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap ${
-              tab === "leaf" ? "bg-ink text-parchment" : "text-ink-soft hover:bg-card"
-            }`}
-          >
-            ساختار برگ و NIR
           </button>
         </div>
       </div>
@@ -356,16 +345,6 @@ export function Lab() {
           <p className="mt-3 text-center text-xs text-muted">
             {COMPOSITES.find((c) => c.id === composite)?.descFa}
           </p>
-        </div>
-      )}
-
-      {tab === "leaf" && (
-        <div className="overflow-hidden rounded-xl border border-line bg-paper">
-          <ResilientImage
-            src={leafImageUrl}
-            alt="مقطع سلولی برگ و برهم‌کنش نور آبی، قرمز و فروسرخ نزدیک"
-            className="h-60 w-full object-cover"
-          />
         </div>
       )}
 
