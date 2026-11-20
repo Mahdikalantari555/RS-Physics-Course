@@ -7,7 +7,7 @@ export const atmosphereGs: Lesson = {
   order: 9,
   summary:
     "چرا آسمان آبی است، مه چگونه باند آبی را مختل می‌کند و باندهای ماهواره‌ای کجا طراحی می‌شوند؟",
-  prerequisites: ["em-spectrum-gs"],
+  prerequisites: ["exponentials"],
   blocks: [
     {
       type: "p",

@@ -7,7 +7,7 @@ export const blackbodyGs: Lesson = {
   order: 8,
   summary:
     "چرا خورشید در مرئی می‌درخشد و زمین در فروسرخ حرارتی تابش می‌کند؟",
-  prerequisites: ["em-spectrum-gs"],
+  prerequisites: ["exponentials", "integrals"],
   blocks: [
     {
       type: "p",
