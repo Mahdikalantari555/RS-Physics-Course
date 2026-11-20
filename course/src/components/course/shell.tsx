@@ -6,9 +6,11 @@ const NAV = [
   { to: "/", label: "درس‌ها", exact: true },
   { to: "/formulas", label: "فرمول‌ها", exact: false },
   { to: "/math", label: "ریاضی", exact: false },
+  { to: "/proofs", label: "اثبات‌ها", exact: false },
   { to: "/solve", label: "حل", exact: false },
   { to: "/labs", label: "آزمایش", exact: false },
   { to: "/exams", label: "آزمون", exact: false },
+  { to: "/play", label: "بازی سه‌بعدی", exact: false },
 ] as const;
 
 export function Shell({ children }: { children: ReactNode }) {

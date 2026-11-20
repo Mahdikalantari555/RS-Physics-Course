@@ -1,13 +1,21 @@
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   computeNDSI,
   computeNDVI,
   computeNDWI,
   extractMultispectralBands,
   getSurfaceReflectance,
-  type BandReflectances,
   type LandCoverId,
 } from "@/lib/remoteSensing";
+import {
+  generateMultispectralScene,
+  inspectScenePixel,
+  renderCompositeRGBA,
+  SCENE_HEIGHT,
+  SCENE_WIDTH,
+  type CompositeId,
+  type PixelInspection,
+} from "@/lib/satellite-scene";
 import type { LabMeta } from "@/content/types";
 import { useProgress } from "@/lib/progress";
 import { ResilientImage } from "@/components/ResilientImage";
@@ -21,57 +29,12 @@ const SURFACES: Array<{ id: LandCoverId; labelFa: string; color: string }> = [
   { id: "snow-ice", labelFa: "برف و یخچال", color: "#5e564e" },
 ];
 
-type CompositeId = "true-color" | "false-nir" | "false-swir" | "ndvi-map";
-
 const COMPOSITES: Array<{ id: CompositeId; labelFa: string; descFa: string }> = [
-  { id: "true-color", labelFa: "رنگ طبیعی (R-G-B)", descFa: "دید چشم انسان: جنگل سبز و برف سفید" },
-  { id: "false-nir", labelFa: "کاذب گیاهی (NIR-R-G)", descFa: "گیاه شاداب قرمز روشن، آب کاملاً سیاه" },
-  { id: "false-swir", labelFa: "کاذب رطوبت و برف (SWIR1-NIR-R)", descFa: "تفکیک فوری برف (فیروزه‌ای/آبی) و خاک خشک" },
-  { id: "ndvi-map", labelFa: "نقشه شاخص NDVI", descFa: "سبز تیره: تراکم بالا · قهوه‌ای/آبی: بدون پوشش یا آب" },
+  { id: "true-color", labelFa: "رنگ طبیعی (R-G-B)", descFa: "دید چشم انسان: قله‌ی برفی، رودخانه و دریاچه‌ی آبی، جنگل سبز و مزارع تنش‌دیده" },
+  { id: "false-nir", labelFa: "کاذب گیاهی (NIR-R-G)", descFa: "جنگل و مزارع سالم قرمز روشن، مزارع تحت تنش کم‌رنگ، آب تقریباً سیاه" },
+  { id: "false-swir", labelFa: "کاذب رطوبت و برف (SWIR1-NIR-R)", descFa: "قله‌های برفی فیروزه‌ای/آبی روشن (جذب شدید SWIR) و پوشش گیاهی سبز درخشان" },
+  { id: "ndvi-map", labelFa: "نقشه شاخص NDVI", descFa: "سبز تیره: تراکم بالا · زرد: تنش گیاهی · قهوه‌ای: خاک برهنه · آبی: آب" },
 ];
-
-const TERRAIN_GRID: LandCoverId[][] = [
-  ["snow-ice", "snow-ice", "dry-soil", "healthy-veg", "healthy-veg", "healthy-veg", "clear-water", "healthy-veg"],
-  ["snow-ice", "dry-soil", "healthy-veg", "healthy-veg", "healthy-veg", "clear-water", "clear-water", "stressed-veg"],
-  ["dry-soil", "healthy-veg", "healthy-veg", "stressed-veg", "clear-water", "clear-water", "stressed-veg", "stressed-veg"],
-  ["dry-soil", "stressed-veg", "stressed-veg", "clear-water", "clear-water", "dry-soil", "dry-soil", "healthy-veg"],
-  ["healthy-veg", "healthy-veg", "clear-water", "clear-water", "dry-soil", "dry-soil", "stressed-veg", "healthy-veg"],
-  ["healthy-veg", "clear-water", "clear-water", "dry-soil", "dry-soil", "stressed-veg", "healthy-veg", "healthy-veg"],
-];
-
-function bandToChannelByte(reflectance: number): number {
-  return Math.max(0, Math.min(255, Math.round(Math.pow(reflectance, 0.72) * 255)));
-}
-
-function getPixelColor(surface: LandCoverId, composite: CompositeId, variation: number): string {
-  const b: BandReflectances = extractMultispectralBands(surface);
-  const v = variation;
-  const clamp = (n: number) => Math.max(0, Math.min(1, n + v));
-
-  if (composite === "true-color") {
-    const r = bandToChannelByte(clamp(b.red) * 1.45);
-    const g = bandToChannelByte(clamp(b.green) * 1.45);
-    const bl = bandToChannelByte(clamp(b.blue) * 1.45);
-    return `rgb(${r}, ${g}, ${bl})`;
-  }
-  if (composite === "false-nir") {
-    const r = bandToChannelByte(clamp(b.nir) * 1.25);
-    const g = bandToChannelByte(clamp(b.red) * 1.35);
-    const bl = bandToChannelByte(clamp(b.green) * 1.35);
-    return `rgb(${r}, ${g}, ${bl})`;
-  }
-  if (composite === "false-swir") {
-    const r = bandToChannelByte(clamp(b.swir1) * 1.35);
-    const g = bandToChannelByte(clamp(b.nir) * 1.25);
-    const bl = bandToChannelByte(clamp(b.red) * 1.35);
-    return `rgb(${r}, ${g}, ${bl})`;
-  }
-  const ndvi = computeNDVI(b.nir, b.red) + v * 0.25;
-  if (ndvi < -0.1) return "#1d5f8a";
-  if (ndvi < 0.2) return "#b4532a";
-  if (ndvi < 0.5) return "#ca8a04";
-  return "#1f6b4a";
-}
 
 export const labMeta: LabMeta = {
   id: "spectral-signatures",
@@ -84,7 +47,23 @@ export function Lab() {
   const { markLab } = useProgress();
   const [selectedSurface, setSelectedSurface] = useState<LandCoverId>("healthy-veg");
   const [tab, setTab] = useState<"curves" | "composite" | "leaf">("curves");
-  const [composite, setComposite] = useState<CompositeId>("false-nir");
+  const [composite, setComposite] = useState<CompositeId>("true-color");
+  const [showOutline, setShowOutline] = useState<boolean>(false);
+  const [hoveredPixel, setHoveredPixel] = useState<PixelInspection | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const scene = useMemo(() => generateMultispectralScene(SCENE_WIDTH, SCENE_HEIGHT), []);
+
+  useEffect(() => {
+    if (tab !== "composite") return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const rgba = renderCompositeRGBA(scene, composite, showOutline ? selectedSurface : null);
+    const img = new ImageData(new Uint8ClampedArray(rgba), scene.width, scene.height);
+    ctx.putImageData(img, 0, 0);
+  }, [tab, scene, composite, selectedSurface, showOutline]);
 
   const bands = extractMultispectralBands(selectedSurface);
   const ndvi = computeNDVI(bands.nir, bands.red);
@@ -272,48 +251,110 @@ export function Lab() {
 
       {tab === "composite" && (
         <div className="rounded-xl border border-line bg-paper p-4">
-          <div className="mb-3 flex flex-wrap gap-1.5">
-            {COMPOSITES.map((comp) => (
-              <button
-                key={comp.id}
-                type="button"
-                onClick={() => setComposite(comp.id)}
-                className={`min-h-9 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-colors whitespace-nowrap ${
-                  composite === comp.id
-                    ? "border-cane bg-cane text-card"
-                    : "border-line bg-card text-ink-soft hover:border-cane"
-                }`}
-              >
-                {comp.labelFa}
-              </button>
-            ))}
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap gap-1.5">
+              {COMPOSITES.map((comp) => (
+                <button
+                  key={comp.id}
+                  type="button"
+                  aria-pressed={composite === comp.id}
+                  onClick={() => setComposite(comp.id)}
+                  className={`min-h-9 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-colors whitespace-nowrap ${
+                    composite === comp.id
+                      ? "border-cane bg-cane text-card"
+                      : "border-line bg-card text-ink-soft hover:border-cane"
+                  }`}
+                >
+                  {comp.labelFa}
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              aria-pressed={showOutline}
+              onClick={() => setShowOutline((prev) => !prev)}
+              className={`min-h-9 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-colors whitespace-nowrap ${
+                showOutline
+                  ? "border-ink bg-ink text-parchment"
+                  : "border-line bg-card text-ink-soft hover:border-ink"
+              }`}
+            >
+              {showOutline ? "پنهان کردن مرز کلاس" : "نمایش مرز کلاس انتخاب‌شده"}
+            </button>
           </div>
 
-          <div className="mx-auto grid max-w-md grid-cols-8 gap-1 rounded-xl bg-ink p-2">
-            {TERRAIN_GRID.map((row, rIdx) =>
-              row.map((cellSurface, cIdx) => {
-                const variation = (((rIdx * 7 + cIdx * 13) % 5) - 2) * 0.015;
-                const isActiveType = cellSurface === selectedSurface;
-                const surfaceInfo = SURFACES.find((s) => s.id === cellSurface)!;
-                return (
-                  <button
-                    key={`${rIdx}-${cIdx}`}
-                    type="button"
-                    onClick={() => setSelectedSurface(cellSurface)}
-                    title={surfaceInfo.labelFa}
-                    aria-label={`پیکسل ${surfaceInfo.labelFa}`}
-                    className={`h-8 rounded-sm transition-transform hover:scale-105 ${
-                      isActiveType ? "z-10 ring-2 ring-parchment" : ""
-                    }`}
-                    style={{ backgroundColor: getPixelColor(cellSurface, composite, variation) }}
-                  />
-                );
-              }),
-            )}
+          <div className="mx-auto max-w-2xl overflow-hidden rounded-xl border border-line bg-ink">
+            <div className="relative aspect-[16/10] w-full select-none">
+              <canvas
+                ref={canvasRef}
+                width={SCENE_WIDTH}
+                height={SCENE_HEIGHT}
+                data-testid="satellite-composite-canvas"
+                aria-label="تصویر ماهواره‌ای چندطیفی با ۸۱٬۰۰۰ پیکسل شامل قله برفی، رودخانه و دریاچه، جنگل، مزارع و خاک خشک"
+                className="block h-full w-full cursor-crosshair"
+                onPointerMove={(event) => {
+                  const rect = event.currentTarget.getBoundingClientRect();
+                  const px = Math.floor(((event.clientX - rect.left) / rect.width) * SCENE_WIDTH);
+                  const py = Math.floor(((event.clientY - rect.top) / rect.height) * SCENE_HEIGHT);
+                  setHoveredPixel(inspectScenePixel(scene, px, py));
+                }}
+                onPointerLeave={() => setHoveredPixel(null)}
+                onClick={(event) => {
+                  const rect = event.currentTarget.getBoundingClientRect();
+                  const px = Math.floor(((event.clientX - rect.left) / rect.width) * SCENE_WIDTH);
+                  const py = Math.floor(((event.clientY - rect.top) / rect.height) * SCENE_HEIGHT);
+                  const pixel = inspectScenePixel(scene, px, py);
+                  setHoveredPixel(pixel);
+                  setSelectedSurface(pixel.surface);
+                  markLab("spectral-signatures");
+                }}
+              />
+              {hoveredPixel ? (
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border border-parchment shadow-sm"
+                  style={{
+                    left: `${((hoveredPixel.x + 0.5) / SCENE_WIDTH) * 100}%`,
+                    top: `${((hoveredPixel.y + 0.5) / SCENE_HEIGHT) * 100}%`,
+                  }}
+                />
+              ) : null}
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-2 border-t border-parchment/15 bg-ink px-3.5 py-2.5 text-xs text-parchment">
+              {hoveredPixel ? (
+                <>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-semibold">
+                      {SURFACES.find((s) => s.id === hoveredPixel.surface)?.labelFa}
+                    </span>
+                    <span className="text-parchment/60" aria-hidden="true">·</span>
+                    <span className="tabular-nums text-parchment/80" dir="ltr">
+                      px ({hoveredPixel.x}, {hoveredPixel.y})
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3 tabular-nums text-parchment/90" dir="ltr">
+                    <span>NDVI {hoveredPixel.ndvi >= 0 ? `+${hoveredPixel.ndvi.toFixed(2)}` : hoveredPixel.ndvi.toFixed(2)}</span>
+                    <span>NDWI {hoveredPixel.ndwi >= 0 ? `+${hoveredPixel.ndwi.toFixed(2)}` : hoveredPixel.ndwi.toFixed(2)}</span>
+                    <span>NDSI {hoveredPixel.ndsi >= 0 ? `+${hoveredPixel.ndsi.toFixed(2)}` : hoveredPixel.ndsi.toFixed(2)}</span>
+                    <span className="text-parchment/70">
+                      R:{Math.round(hoveredPixel.red * 100)}% G:{Math.round(hoveredPixel.green * 100)}% B:{Math.round(hoveredPixel.blue * 100)}% NIR:{Math.round(hoveredPixel.nir * 100)}%
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <div className="flex w-full flex-wrap items-center justify-between gap-2 text-parchment/80">
+                  <span>نشانگر را روی تصویر حرکت دهید یا روی هر عارضه کلیک کنید تا بازتاب ۵ باند آن خوانده شود.</span>
+                  <span className="tabular-nums text-parchment/65" dir="ltr">
+                    360 × 225 px (81,000 px)
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
 
           <p className="mt-3 text-center text-xs text-muted">
-            {COMPOSITES.find((c) => c.id === composite)?.descFa} · روی هر پیکسل کلیک کنید تا امضای طیفی آن خوانده شود.
+            {COMPOSITES.find((c) => c.id === composite)?.descFa}
           </p>
         </div>
       )}

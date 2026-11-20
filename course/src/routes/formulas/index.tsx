@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Formula } from "@/components/course/formula";
 import { Shell } from "@/components/course/shell";
 import { formulas, getFormula } from "@/content/load";
@@ -147,12 +147,20 @@ function FormulasPage() {
 
   return (
     <Shell>
-      <header>
-        <p className="text-sm font-medium text-cane">مرجع جامع روابط و ثابت‌ها</p>
-        <h1 className="mt-1 text-3xl font-semibold">مرجع فرمول‌ها، کالبدشکافی و مبدل سریع</h1>
-        <p className="mt-3 max-w-2xl text-lg leading-relaxed text-ink-soft">
-          مجموعه کامل {faInt(formulas.length)} رابطه تعاملی از الکترومغناطیس و ترمودینامیک تابش تا اپتیک جو، شاخص‌های طیفی، مدار و رادار همراه با مبدل سریع محاسباتی.
-        </p>
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="text-sm font-medium text-cane">مرجع جامع روابط و ثابت‌ها</p>
+          <h1 className="mt-1 text-3xl font-semibold">مرجع فرمول‌ها، کالبدشکافی و مبدل سریع</h1>
+          <p className="mt-3 max-w-2xl text-lg leading-relaxed text-ink-soft">
+            مجموعه کامل {faInt(formulas.length)} رابطه تعاملی از الکترومغناطیس و ترمودینامیک تابش تا اپتیک جو، شاخص‌های طیفی، مدار و رادار همراه با مبدل سریع محاسباتی.
+          </p>
+        </div>
+        <Link
+          to="/proofs"
+          className="inline-flex min-h-11 shrink-0 items-center rounded-lg border border-cane bg-cane-soft px-4 text-sm font-medium text-cane hover:bg-cane hover:text-parchment transition-colors whitespace-nowrap"
+        >
+          اثبات گام‌به‌گام این فرمول‌ها
+        </Link>
       </header>
 
       {/* Quick Calculators */}

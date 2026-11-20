@@ -9,7 +9,7 @@ export function DisplayMath({ latex }: { latex: string }) {
   return (
     <div
       dir="ltr"
-      className="formula-display overflow-x-auto rounded-xl bg-ink px-3 py-4 text-center text-parchment"
+      className="formula-display max-w-full overflow-x-auto rounded-xl bg-ink px-3 py-4 text-center text-parchment"
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

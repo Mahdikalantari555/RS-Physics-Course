@@ -17,5 +17,9 @@
     "lint": "npm run lint --workspace=course",
     "typecheck": "npm run typecheck --workspace=course",
     "preview": "npm run preview --workspace=course"
+  },
+  "dependencies": {
+    "@types/three": "^0.187.0",
+    "three": "^0.187.0"
   }
 }

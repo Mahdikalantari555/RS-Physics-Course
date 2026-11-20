@@ -7,9 +7,10 @@ export type ProgressState = {
   labs: Record<string, true>;
   quizzes: Record<string, { correct: number; total: number }>;
   problems: Record<string, true>;
+  missions: Record<string, true>;
 };
 
-const empty: ProgressState = { lessons: {}, labs: {}, quizzes: {}, problems: {} };
+const empty: ProgressState = { lessons: {}, labs: {}, quizzes: {}, problems: {}, missions: {} };
 
 type Api = {
   data: ProgressState;
@@ -17,6 +18,7 @@ type Api = {
   toggleLesson: (slug: string) => void;
   toggleProblem: (slug: string) => void;
   markLab: (id: string) => void;
+  markMission: (id: string) => void;
   saveQuiz: (id: string, correct: number, total: number) => void;
   reset: () => void;
 };
@@ -31,6 +33,7 @@ function sanitize(raw: unknown): ProgressState {
     labs: v.labs && typeof v.labs === "object" ? v.labs : {},
     quizzes: v.quizzes && typeof v.quizzes === "object" ? v.quizzes : {},
     problems: v.problems && typeof v.problems === "object" ? v.problems : {},
+    missions: v.missions && typeof v.missions === "object" ? v.missions : {},
   };
 }
 
@@ -79,6 +82,9 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       },
       markLab(id) {
         setData((d) => (d.labs[id] ? d : { ...d, labs: { ...d.labs, [id]: true } }));
+      },
+      markMission(id) {
+        setData((d) => (d.missions[id] ? d : { ...d, missions: { ...d.missions, [id]: true } }));
       },
       saveQuiz(id, correct, total) {
         setData((d) => {

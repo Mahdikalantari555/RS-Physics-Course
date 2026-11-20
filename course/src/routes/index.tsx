@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Calculator, FlaskConical, ListChecks, PenLine, Sigma } from "lucide-react";
+import { Calculator, FlaskConical, ListChecks, Orbit, PenLine, Sigma } from "lucide-react";
 import { Shell } from "@/components/course/shell";
 import { exams, formulas, lessons, primers, problems } from "@/content/load";
 import { labs } from "@/components/labs/load-labs";
@@ -59,7 +59,25 @@ function Home() {
         </div>
       </section>
 
-      <ol className="mt-10 flex flex-col gap-3">
+      <section className="mt-6 rounded-2xl border border-line bg-paper p-5 sm:flex sm:items-center sm:justify-between sm:gap-6">
+        <div className="min-w-0">
+          <p className="text-xs font-medium text-copper">درس ویژه · مبانی ریاضی تا فیزیک نور</p>
+          <h2 className="mt-1 text-xl font-semibold text-ink">
+            آموزش اثبات‌های ریاضی از پایه + اثبات مرحله‌به‌مرحله‌ی ۱۱ فرمول اصلی دوره
+          </h2>
+          <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
+            آناتومی اثبات، ۶ روش اصلی، ۷ عمل مجاز جبری–تحلیلی، کارگاه شکار خطا، و اثبات کامل ماکسول، پلانک، وین، استفان–بولتزمن، کیرشهف، بیر–لامبرت، GSD و کپلر.
+          </p>
+        </div>
+        <Link
+          to="/proofs"
+          className="mt-4 inline-flex min-h-11 shrink-0 items-center rounded-lg bg-ink px-4 text-sm font-medium text-parchment transition-opacity hover:opacity-90 sm:mt-0 whitespace-nowrap"
+        >
+          شروع درس ویژه اثبات‌ها
+        </Link>
+      </section>
+
+      <ol className="mt-8 flex flex-col gap-3">
         {lessons.map((lesson) => {
           const done = ready && data.lessons[lesson.slug];
           return (
@@ -113,6 +131,12 @@ function Home() {
           icon={<ListChecks className="size-5" />}
           title="آزمون دوره"
           text={`${faInt(allExams.length)} آزمون جامع، بدون دیدن جواب تا ثبت نهایی`}
+        />
+        <Door
+          to="/play"
+          icon={<Orbit className="size-5" />}
+          title="بازی سه‌بعدی مداری"
+          text="مأموریت تعاملی مدار ماهواره، پنجره‌ی جوی، GSD و دید حرارتی وین"
         />
       </div>
 
@@ -170,7 +194,7 @@ function Door({
   title,
   text,
 }: {
-  to: "/formulas" | "/math" | "/labs" | "/exams" | "/solve";
+  to: "/formulas" | "/math" | "/labs" | "/exams" | "/solve" | "/play";
   icon: ReactNode;
   title: string;
   text: string;

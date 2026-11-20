@@ -32,6 +32,12 @@ function MathIndex() {
       </p>
       <div className="mt-4 flex flex-wrap gap-3">
         <Link
+          to="/proofs"
+          className="inline-flex min-h-11 items-center rounded-full bg-cane px-4 text-sm font-medium text-parchment hover:opacity-90"
+        >
+          درس ویژه: آموزش اثبات ریاضی از پایه
+        </Link>
+        <Link
           to="/formulas"
           className="inline-flex min-h-11 items-center rounded-full bg-ink px-4 text-sm text-parchment"
         >
